@@ -26,6 +26,6 @@ export default async function TransactionApi(
     where: { id: body.id },
     data: { status: body.value, version: {increment: 1} },
   });
-  pusher.trigger("updates", "updated", {version: updated.version, id: updated.id})
+  await pusher.trigger("updates", "updated", {version: updated.version, id: updated.id})
   return res.json({ success: true });
 }
