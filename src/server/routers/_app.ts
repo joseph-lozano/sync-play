@@ -1,20 +1,16 @@
 import { z } from "zod";
 import { procedure, router } from "../trpc";
-import { faker } from "@faker-js/faker";
-import { Payment, statuses } from "~/payments";
+import { db } from "~/lib/prisma";
 
 export const appRouter = router({
   payments: procedure
     .input(z.object({ count: z.number() }))
-    .query(({ input: { count } }) => {
-      const payments: Payment[] = Array.from({ length: count }).map((_, i) => ({
-        id: faker.string.nanoid(),
-        amount: (Math.random() * 100).toFixed(2).toString(),
-        status: statuses[Math.floor(Math.random() * statuses.length)],
-        email: faker.internet.email(),
-      }));
-      return payments;
-    }),
+    .query(({ input: { count } }) =>
+      db.payment.findMany({
+        include: { sender: true, receiver: true },
+        take: count,
+      })
+    ),
 });
 
 // export type definition of API

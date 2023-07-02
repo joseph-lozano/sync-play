@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2022",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "experimentalDecorators": true,
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,6 +19,6 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "prisma/seed.ts"],
   "exclude": ["node_modules"]
 }
