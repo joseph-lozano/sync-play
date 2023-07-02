@@ -6,9 +6,12 @@ export default function DemoPage() {
 
   if (payments.length > 0) {
     console.log({
-      firstPayment: payments[2].sender.sentPayments
-    })
-    console.log("sender", payments[0].sender.sentPayments[0].sender.sentPayments);
+      firstPayment: payments[2].sender.sentPayments,
+    });
+    console.log(
+      "sender",
+      payments[0].sender.sentPayments[0].sender.sentPayments
+    );
   }
 
   return (
