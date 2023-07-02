@@ -40,6 +40,9 @@ decorators, so we have to use a Proxy to intercept the
 setter in order to auto-magically send the post request
 to the API whenever the object is modified. If the request
 fails, we reset the value to the old value.
+
+TODO: Don't send the request on property changes, but instead
+queue them, and send the request on a .save() method call.
 */
 function createPayment(data: PrismaPaymentWithUsers) {
   const target = new Payment(data);
