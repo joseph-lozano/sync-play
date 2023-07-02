@@ -31,7 +31,6 @@ export default function DemoPage() {
           data.forEach((versionData: { id: string; version: number }) => {
             const payment = payments.get(versionData.id);
             if (payment && payment.version < versionData.version) {
-              console.log("TRUE")
               fetch(`/api/payments/${versionData.id}`)
                 .then((res) => res.json())
                 .then((data) => {
