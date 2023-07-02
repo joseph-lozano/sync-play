@@ -3,7 +3,7 @@ import DataTable from "~/components/payments/data-table";
 import { Payment, createPayment } from "~/models";
 import { configure } from "mobx";
 import { useEffect, useState } from "react";
-import Pusher from 'pusher-js';
+import Pusher from "pusher-js";
 import { env } from "~/env";
 
 configure({
@@ -14,23 +14,23 @@ export default function DemoPage() {
   const [payments, setPayments] = useState<Map<string, Payment>>(new Map());
 
   useEffect(() => {
-    console.log(env.NEXT_PUBLIC_PUSHER_CLUSTER, env.NEXT_PUBLIC_PUSHER_APP_ID)
+    console.log(env.NEXT_PUBLIC_PUSHER_CLUSTER, env.NEXT_PUBLIC_PUSHER_APP_ID);
     Pusher.logToConsole = true;
     const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: env.NEXT_PUBLIC_PUSHER_CLUSTER,
     });
-    const channel = pusher.subscribe('updates')
-    channel.bind('updated', function(data: any) {
+    const channel = pusher.subscribe("updates");
+    channel.bind("updated", function (data: any) {
       fetch(`/api/payments/${data.id}`)
-                .then((res) => res.json())
-                .then((data) => {
-                  setPayments((prev) => {
-                    const map = new Map(prev);
-                    map.set(data.id, createPayment(data));
-                    return map;
-                  });
-                });
-    })
+        .then((res) => res.json())
+        .then((data) => {
+          setPayments((prev) => {
+            const map = new Map(prev);
+            map.set(data.id, createPayment(data));
+            return map;
+          });
+        });
+    });
 
     fetch("/api/payments")
       .then((res) => res.json())
@@ -41,32 +41,10 @@ export default function DemoPage() {
         });
         setPayments(map);
       });
-      return () => {pusher.unsubscribe('updates')}
+    return () => {
+      pusher.unsubscribe("updates");
+    };
   }, []);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     fetch("/api/versions")
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         data.forEach((versionData: { id: string; version: number }) => {
-  //           const payment = payments.get(versionData.id);
-  //           if (payment && payment.version < versionData.version) {
-  //             fetch(`/api/payments/${versionData.id}`)
-  //               .then((res) => res.json())
-  //               .then((data) => {
-  //                 setPayments((prev) => {
-  //                   const map = new Map(prev);
-  //                   map.set(data.id, createPayment(data));
-  //                   return map;
-  //                 });
-  //               });
-  //           }
-  //         });
-  //       });
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, [payments]);
 
   return (
     <div className="container mx-auto py-10">

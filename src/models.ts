@@ -25,8 +25,6 @@ class Payment {
   @property
   amount: PrismaPayment["amount"];
 
-  version: PrismaPayment["version"];
-
   sender: PrismaUser;
   receiver: PrismaUser;
 
@@ -36,7 +34,6 @@ class Payment {
     this.amount = data.amount;
     this.sender = data.sender;
     this.receiver = data.receiver;
-    this.version = data.version;
     makeAutoObservable(this);
   }
 }
@@ -50,8 +47,8 @@ function createPayment(data: PrismaPaymentWithUsers) {
         const entity = target.constructor.name;
         const id = target.id;
         const reset = () => Reflect.set(target, prop, oldValue, receiver);
-        fetch("/api/transaction", {
-          method: "POST",
+        fetch(`/api/payments/${id}`, {
+          method: "PATCH",
           body: JSON.stringify({ entity, id, oldValue, value }),
           headers: { "Content-Type": "application/json" },
         })
