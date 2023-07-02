@@ -15,7 +15,6 @@ function property(target: any, key: string) {
   if (!propertyMap.has(target.constructor.name))
     propertyMap.set(target.constructor.name, []);
   propertyMap.get(target.constructor.name)?.push(key);
-  console.log(propertyMap);
 }
 
 class Payment {
@@ -26,6 +25,8 @@ class Payment {
   @property
   amount: PrismaPayment["amount"];
 
+  version: PrismaPayment["version"];
+
   sender: PrismaUser;
   receiver: PrismaUser;
 
@@ -35,6 +36,7 @@ class Payment {
     this.amount = data.amount;
     this.sender = data.sender;
     this.receiver = data.receiver;
+    this.version = data.version;
     makeAutoObservable(this);
   }
 }

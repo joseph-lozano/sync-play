@@ -32,4 +32,5 @@ model Payment {
   sender     User          @relation(name: "senderId", fields: [senderId], references: [id])
   receiverId String
   receiver   User          @relation(name: "receiverId", fields: [receiverId], references: [id])
+  version    Int           @default(1)
 }

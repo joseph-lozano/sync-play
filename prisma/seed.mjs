@@ -28,7 +28,7 @@ for (let i = 0; i < 20; i++) {
   const payment = {
     id: typeid("payment").toString(),
     amount: randomNumber(3, 500),
-    status: PaymentStatus[Math.floor(Math.random() * PaymentStatus.length)],
+    status: "pending",
     senderId: sender.id,
     receiverId: receiver.id,
   };
