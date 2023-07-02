@@ -1,22 +1,20 @@
 "use client";
 
 import Pusher from "pusher-js";
-import { createContext,useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { env } from "~/env";
-import {Payment as PrismaPayment, User as PrismaUser} from "@prisma/client";
+import { Payment as PrismaPayment, User as PrismaUser } from "@prisma/client";
 import { Payment, createPayment } from "~/models";
 
 const PaymentContext = createContext<Map<string, Payment>>(new Map());
 
-
 export default function PaymentProvider({
   children,
-  payments
+  payments,
 }: {
   children: React.ReactNode;
   payments: (PrismaPayment & { sender: PrismaUser; receiver: PrismaUser })[];
 }) {
-  
   const [map, setMap] = useState<Map<string, Payment>>(new Map());
 
   useEffect(() => {
@@ -25,7 +23,7 @@ export default function PaymentProvider({
       return map;
     }, new Map<string, Payment>());
     setMap(newMap);
-  
+
     Pusher.logToConsole = true;
     const pusher = new Pusher(env.NEXT_PUBLIC_PUSHER_KEY, {
       cluster: env.NEXT_PUBLIC_PUSHER_CLUSTER,
@@ -45,10 +43,12 @@ export default function PaymentProvider({
     return () => {
       pusher.unsubscribe("updates");
     };
-  },[setMap,payments]);
-  return <PaymentContext.Provider value={map}>{children}</PaymentContext.Provider>;
+  }, [setMap, payments]);
+  return (
+    <PaymentContext.Provider value={map}>{children}</PaymentContext.Provider>
+  );
 }
 
 export const usePayments = () => {
   return useContext(PaymentContext);
-}
+};

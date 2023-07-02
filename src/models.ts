@@ -6,10 +6,6 @@ type PrismaPaymentWithUsers = PrismaPayment & {
   receiver: PrismaUser;
 };
 
-export function createPayments(data: PrismaPaymentWithUsers[]) {
-  return data.map((p) => createPayment(p));
-}
-
 const propertyMap = new Map<string, Array<string>>();
 function property(target: any, key: string) {
   if (!propertyMap.has(target.constructor.name))
@@ -38,6 +34,13 @@ class Payment {
   }
 }
 
+/* 
+You can't intercept the property accessor at runtime with
+decorators, so we have to use a Proxy to intercept the
+setter in order to auto-magically send the post request
+to the API whenever the object is modified. If the request
+fails, we reset the value to the old value.
+*/
 function createPayment(data: PrismaPaymentWithUsers) {
   const target = new Payment(data);
   const proxy = new Proxy(target, {
@@ -55,7 +58,8 @@ function createPayment(data: PrismaPaymentWithUsers) {
           .then((res) => res.json())
           .then(({ success }) => {
             if (!success) reset();
-          });
+          })
+          .catch(() => reset());
       }
       return Reflect.set(target, prop, value, receiver);
     },
