@@ -1,3 +1,4 @@
+"use client"
 import { columns } from "~/components/payments/columns";
 import DataTable from "~/components/payments/data-table";
 import { Payment, createPayment } from "~/models";
