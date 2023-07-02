@@ -6,7 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { observer } from "mobx-react-lite";
+import { usePayments } from "~/app/payments-provider";
 
 import {
   Table,
