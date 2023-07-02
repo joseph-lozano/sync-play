@@ -1,12 +1,9 @@
-"use client";
-
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { usePayments } from "~/app/payments-provider";
 
 import {
   Table,
@@ -31,6 +28,7 @@ function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
 
   return (
     <div className="rounded-md border">
