@@ -1,3 +1,5 @@
+"use client";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { Payment } from "~/models";
 import { Button } from "~/components/ui/button";
@@ -21,7 +23,6 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: "status",
     header: "Status",
     cell: observer(({ row }) => {
-      console.log("COLUMN rendering");
       const payment = row.original;
 
       const variant = match<PaymentStatus, ButtonVariant>(payment.status)

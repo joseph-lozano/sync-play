@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { env } from "~/env";
 import { Payment as PrismaPayment, User as PrismaUser } from "@prisma/client";
 import { Payment, createPayment } from "~/models";
+import { useToast } from "~/components/ui/use-toast";
 
 const PaymentContext = createContext<Map<string, Payment>>(new Map());
 
@@ -16,10 +17,11 @@ export default function PaymentProvider({
   payments: (PrismaPayment & { sender: PrismaUser; receiver: PrismaUser })[];
 }) {
   const [map, setMap] = useState<Map<string, Payment>>(new Map());
+  const { toast } = useToast();
 
   useEffect(() => {
     const newMap = payments.reduce((map, payment) => {
-      map.set(payment.id, createPayment(payment));
+      map.set(payment.id, createPayment(payment, toast));
       return map;
     }, new Map<string, Payment>());
     setMap(newMap);
@@ -35,7 +37,7 @@ export default function PaymentProvider({
         .then((data) => {
           setMap((prev) => {
             const map = new Map(prev);
-            map.set(data.id, createPayment(data));
+            map.set(data.id, createPayment(data, toast));
             return map;
           });
         });
@@ -43,7 +45,7 @@ export default function PaymentProvider({
     return () => {
       pusher.unsubscribe("updates");
     };
-  }, [setMap, payments]);
+  }, [setMap, payments, toast]);
   return (
     <PaymentContext.Provider value={map}>{children}</PaymentContext.Provider>
   );

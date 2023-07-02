@@ -15,12 +15,10 @@ configure({
 });
 
 export default async function DemoPage() {
-  console.log("BEFORE");
   const payments = await db.payment.findMany({
     include: { sender: true, receiver: true },
     orderBy: { id: "asc" },
   });
-  console.log("AFTER");
 
   return (
     <div className="container mx-auto py-10">

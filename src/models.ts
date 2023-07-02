@@ -44,7 +44,7 @@ fails, we reset the value to the old value.
 TODO: Don't send the request on property changes, but instead
 queue them, and send the request on a .save() method call.
 */
-function createPayment(data: PrismaPaymentWithUsers) {
+function createPayment(data: PrismaPaymentWithUsers, toast?: Function) {
   const target = new Payment(data);
   const proxy = new Proxy(target, {
     set(target, prop, value, receiver) {
@@ -61,8 +61,20 @@ function createPayment(data: PrismaPaymentWithUsers) {
           .then((res) => res.json())
           .then(({ success }) => {
             if (!success) reset();
+            if (toast)
+              toast({
+                title: "Update Failed",
+                description: "The update was rejected by the server.",
+              });
           })
-          .catch(() => reset());
+          .catch(() => {
+            reset();
+            if (toast)
+              toast({
+                title: "Update Failed",
+                description: "Something went wrong.",
+              });
+          });
       }
       return Reflect.set(target, prop, value, receiver);
     },
